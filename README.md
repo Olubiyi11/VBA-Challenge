@@ -1,2 +1,3 @@
 # VBA-Challenge
 UC Berkley Visual Analytics Bootcamp Module 2 assignment
+First, I got help from ASKBCS about the concept of 'previous ticker' vs 'Present ticker' and 'future ticker', but then when we ran it, it messed up the excel file and we couldn't continue because we were out of time. Then, I got a lot of help from the instructor, Sandyha Kumari, from the 1hour weekly session. For the second display, I tried to use the 'Find' function to get an ID for the cells with the highest percent changes so that i could then use the 'Offset' function to find the corresponding Ticker symbol, I kept getting messages like 'Compiler error' and 'Object required'. Then, the same TA guided me to come up with an If statement instead.
