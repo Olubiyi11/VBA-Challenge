@@ -1,0 +1,98 @@
+Sub Multiple_Year_Sto()
+
+For Each ws In Worksheets
+
+Dim SummaryRow As Integer
+Dim TotalVolume As Double
+Dim TickerSymbol As String
+Dim YearlyChange As Double
+Dim PercentChange As Double
+'Initialize variables
+ TotalVolume = 0
+ SummaryRow = 2
+ OpeningPrice = ws.Cells(2, 3).Value
+
+'Create summary table: add colummn headers
+    ws.Cells(1, 9).Value = "Ticker"
+    
+    ws.Cells(1, 10).Value = "Yearly Change"
+    ws.Cells(1, 11).Value = "Percent Change"
+    ws.Cells(1, 12).Value = "Total Stock Volume"
+    
+ LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+ For i = 2 To LastRow
+
+        If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+            TickerSymbol = ws.Cells(i, 1).Value
+            TotalVolume = TotalVolume + ws.Cells(i, 7).Value
+            YearlyChange = ws.Cells(i, 6).Value - OpeningPrice
+            If OpeningPrice = 0 Then
+                 PercentChange = 0
+            Else
+                 PercentChange = YearlyChange / OpeningPrice
+            End If
+            
+            'Set the Colors of the Yearlychange column
+            If YearlyChange < 0 Then
+            ws.Cells(SummaryRow, 10).Interior.ColorIndex = 3
+        Else
+            ws.Cells(SummaryRow, 10).Interior.ColorIndex = 4
+        End If
+
+'Display the output in summary table
+            ws.Range("I" & SummaryRow).Value = TickerSymbol
+            ws.Range("L" & SummaryRow).Value = TotalVolume
+            ws.Range("J" & SummaryRow).Value = YearlyChange
+            ws.Range("K" & SummaryRow).Value = PercentChange
+            ws.Range("K" & SummaryRow).NumberFormat = "0.00%"
+            TotalVolume = 0
+            SummaryRow = SummaryRow + 1
+            OpeningPrice = ws.Cells(i + 1, 3).Value
+        Else
+            YearlyChange = ws.Cells(i, 6).Value - OpeningPrice
+            TotalVolume = TotalVolume + ws.Cells(i, 7).Value
+       End If
+       
+       Next i
+    
+Dim r As Range
+Dim s As Range
+Dim Highestpercenthange As Double
+Dim Lowestpercentchange As Double
+Dim HighestVolchange As Double
+
+Set r = ws.Range("K2:K" & LastRow)
+Set s = ws.Range("L2:L" & LastRow)
+
+'Display the second set of outputs in another Table
+ws.Cells(2, 15).Value = "Greatest Percent Increase"
+ws.Cells(3, 15).Value = "Greatest Percent Decrease"
+ws.Cells(4, 15).Value = "Greaest Total Volume"
+ws.Cells(1, 16).Value = "Ticker"
+ws.Cells(1, 17).Value = "Value"
+ws.Cells(2, 17).Value = Application.WorksheetFunction.Max(r)
+ws.Range("Q2:Q3").NumberFormat = "0.00%"
+ws.Cells(3, 17).Value = Application.WorksheetFunction.Min(r)
+ws.Cells(4, 17).Value = Application.WorksheetFunction.Max(s)
+
+Highestpercentchange = WorksheetFunction.Max(r)
+Lowestpercentchange = WorksheetFunction.Min(r)
+HighestVolchange = WorksheetFunction.Max(s)
+
+
+'find ticker for the 2nd table
+For j = 2 To LastRow
+If ws.Cells(j, 11) = Highestpercentchange Then
+ws.Range("P2").Value = ws.Cells(j, 9).Value
+ElseIf ws.Cells(j, 11) = Lowestpercentchange Then
+ws.Range("P3").Value = ws.Cells(j, 9).Value
+ElseIf ws.Cells(j, 12) = HighestVolchange Then
+ws.Range("P4").Value = ws.Cells(j, 9).Value
+End If
+Next j
+
+Next ws
+End Sub
+
+
+
